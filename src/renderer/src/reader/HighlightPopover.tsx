@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Copy, StickyNote, Trash2 } from 'lucide-react'
 import { HIGHLIGHT_COLORS, type Highlight, type HighlightColor } from '@shared/types'
+import { formatShortcutLabel } from '@shared/shortcuts'
 import { Popover } from '../components/Popover'
+import { useStore } from '../store'
 import { HIGHLIGHT_HEX, type Rect } from './engine'
 
 interface Props {
@@ -20,6 +22,7 @@ interface Props {
 /** Colours, note and copy for a selection; recolour, note and delete for an existing highlight. */
 export function HighlightPopover(props: Props): ReactNode {
   const { rect, highlight, editing } = props
+  const platform = useStore((s) => s.info?.platform)
   const [note, setNote] = useState(highlight?.note ?? '')
   const areaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -75,7 +78,7 @@ export function HighlightPopover(props: Props): ReactNode {
           />
           <div className="hl-pop__foot">
             <span className="muted" style={{ flex: 1, fontSize: 11.5, alignSelf: 'center' }}>
-              Ctrl+Enter to save
+              {formatShortcutLabel('Ctrl+Enter to save', platform)}
             </span>
             <button className="btn btn--ghost" onClick={props.onClose}>
               Cancel

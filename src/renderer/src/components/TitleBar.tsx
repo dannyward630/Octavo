@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { Plus, Search, Settings } from 'lucide-react'
+import { formatShortcutLabel } from '@shared/shortcuts'
 import { useStore } from '../store'
 import { Logo } from './Logo'
 
@@ -9,6 +10,7 @@ export function TitleBar(): ReactNode {
   const setQuery = useStore((s) => s.setQuery)
   const importing = useStore((s) => s.importing)
   const hasBooks = useStore((s) => s.books.length > 0)
+  const platform = useStore((s) => s.info?.platform)
   const searchRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -55,7 +57,11 @@ export function TitleBar(): ReactNode {
         <button className="btn btn--ghost" onClick={() => void useStore.getState().importDialog()} disabled={importing}>
           <Plus size={15} /> {importing ? 'Importing…' : 'Import'}
         </button>
-        <button className="icon-btn" title="Settings (Ctrl+,)" onClick={() => useStore.getState().openSettings(true)}>
+        <button
+          className="icon-btn"
+          title={`Settings (${formatShortcutLabel('Ctrl+,', platform)})`}
+          onClick={() => useStore.getState().openSettings(true)}
+        >
           <Settings size={16} />
         </button>
       </div>

@@ -4,6 +4,7 @@ import type { Book, FileRecord, FileState, Highlight, HighlightColor, Locator, R
 import { readerCommands, useStore } from '../store'
 import { fetchBookFile, loadPageIndex } from '../lib/indexer'
 import { PageLocator } from '@shared/pages'
+import { formatShortcutLabel } from '@shared/shortcuts'
 import { percent, uid } from '../lib/format'
 import { rectOf, type Anchor } from '../components/Popover'
 import { restoreTitleBar } from '../hooks'
@@ -33,6 +34,7 @@ export function Reader(): ReactNode {
 }
 
 function ReaderView({ book, file }: { book: Book; file: FileRecord }): ReactNode {
+  const platform = useStore((s) => s.info?.platform)
   const settings = useStore((s) => s.settings.reader)
   const sidebarOpen = useStore((s) => s.sidebarOpen)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -343,7 +345,7 @@ function ReaderView({ book, file }: { book: Book; file: FileRecord }): ReactNode
           </button>
           <button
             className="icon-btn"
-            title="Contents, bookmarks and highlights (Ctrl+\)"
+            title={`Contents, bookmarks and highlights (${formatShortcutLabel('Ctrl+\\', platform)})`}
             aria-pressed={sidebarOpen}
             onClick={() => useStore.getState().toggleSidebar()}
           >
@@ -367,7 +369,11 @@ function ReaderView({ book, file }: { book: Book; file: FileRecord }): ReactNode
             )}
             <button
               className="icon-btn"
-              title={bookmarked ? 'Remove bookmark (Ctrl+B)' : 'Bookmark this page (Ctrl+B)'}
+              title={
+                bookmarked
+                  ? `Remove bookmark (${formatShortcutLabel('Ctrl+B', platform)})`
+                  : `Bookmark this page (${formatShortcutLabel('Ctrl+B', platform)})`
+              }
               aria-pressed={bookmarked}
               onClick={toggleBookmark}
               disabled={status !== 'ready'}

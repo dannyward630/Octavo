@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { FolderOpen, RefreshCw, X } from 'lucide-react'
 import type { Settings } from '@shared/types'
+import { formatShortcutLabel } from '@shared/shortcuts'
 import { useStore } from '../store'
 
 const SHORTCUTS: Array<[string, string]> = [
@@ -121,7 +122,7 @@ export function SettingsPanel(): ReactNode {
               <div className="setting" key={keys} style={{ padding: '4px 0' }}>
                 <span>{what}</span>
                 <span className="muted" style={{ fontSize: 12.5 }}>
-                  {keys}
+                  {formatShortcutLabel(keys, info?.platform)}
                 </span>
               </div>
             ))}

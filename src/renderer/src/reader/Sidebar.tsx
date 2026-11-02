@@ -1,5 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { NotebookPen, StickyNote, Trash2 } from 'lucide-react'
+import { shortcutModifier } from '@shared/shortcuts'
+import { useStore } from '../store'
 import type { Book, Bookmark, FileState, Highlight } from '@shared/types'
 import { Cover } from '../components/Cover'
 import { authorsLine, percent, relativeDay } from '../lib/format'
@@ -113,6 +115,8 @@ function HighlightItem({ h, onGo, onDelete, onSaveNote }: { h: Highlight; onGo()
 }
 
 export function Sidebar(props: Props): ReactNode {
+  const platform = useStore((s) => s.info?.platform)
+  const modifier = shortcutModifier(platform)
   const { book, state, toc, tab } = props
   const bookmarks = [...(state?.bookmarks ?? [])].sort((a, b) => a.fraction - b.fraction)
   const highlights = [...(state?.highlights ?? [])].sort((a, b) => a.fraction - b.fraction)
@@ -169,7 +173,7 @@ export function Sidebar(props: Props): ReactNode {
             ))
           ) : (
             <div className="bookside__empty">
-              No bookmarks yet. Press <kbd>Ctrl</kbd>+<kbd>B</kbd> to bookmark the page you are on.
+              No bookmarks yet. Press <kbd>{modifier}</kbd>{modifier === 'Ctrl' ? '+' : ''}<kbd>B</kbd> to bookmark the page you are on.
             </div>
           ))}
 
